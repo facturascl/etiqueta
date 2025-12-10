@@ -9,7 +9,7 @@
     
     <style>
         /* ==================================== */
-        /* ESTILOS GENERALES DE LA PÁGINA */
+        /* ESTILOS GENERALES DE LA PÁGINA (Selectores) */
         /* ==================================== */
         body {
             font-family: Arial, sans-serif;
@@ -29,7 +29,7 @@
 
         h1 {
             text-align: center;
-            color: #5d2b5d; /* Color principal */
+            color: #5d2b5d;
             margin-bottom: 30px;
             border-bottom: 2px solid #5d2b5d;
             padding-bottom: 10px;
@@ -53,137 +53,128 @@
             border-radius: 4px;
             box-sizing: border-box;
             font-size: 16px;
-            appearance: none; /* Eliminar estilo nativo en algunos navegadores */
+            appearance: none;
             background-color: #fff;
         }
 
-        select:focus {
-            border-color: #5d2b5d;
-            outline: none;
-            box-shadow: 0 0 0 3px rgba(93, 43, 93, 0.2);
-        }
-
         /* ==================================== */
-        /* ESTILOS DE LA ETIQUETA */
+        /* ESTILOS DE LA ETIQUETA (PANTALLA) */
         /* ==================================== */
         .etiqueta-container {
-            width: 80mm; /* Ancho de la etiqueta (8cm) */
-            padding: 10px;
-            margin: 40px auto; /* Espacio y centrado en pantalla */
+            /* Dimensión de previsualización: 50mm x 30mm */
+            width: 50mm; 
+            height: 30mm;
+            overflow: hidden; 
+            padding: 1mm; 
+            margin: 40px auto;
             border: 1px dashed #aaa;
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
             background-color: #fff;
         }
 
+        /* Texto y Precio (Diseño compacto para previsualización) */
         .info-line {
-            font-size: 1.5em; /* Tamaño de fuente para las líneas de información */
-            margin-bottom: 5px;
+            font-size: 8pt; 
+            margin-bottom: 0.5mm;
             display: flex; 
-            justify-content: space-between; 
-            border-bottom: 1px dashed #333;
-            padding-bottom: 3px;
+            padding-bottom: 0.3mm;
+            justify-content: flex-start; /* Todo a la izquierda para el producto */
         }
-
-        .info-line .label {
-            font-weight: normal;
-        }
-
-        .info-line .value {
-            font-weight: bold;
-            text-align: right;
-            margin-left: 10px;
+        
+        .product-name-line {
+            font-weight: bold; 
         }
 
         .price-total {
-            font-size: 2.2em; /* Tamaño grande para el precio total en pantalla */
+            font-size: 10pt; 
             font-weight: 900;
-            color: #333;
-            margin: 15px 0;
-            border: none;
-            padding-bottom: 0;
+            margin: 0.5mm 0 1mm 0;
+            border-bottom: 1px dashed #333;
+            padding-bottom: 0.5mm;
+            justify-content: flex-end; /* Precio a la derecha */
         }
 
+        /* Área del código de barras (Máxima prioridad en pantalla) */
         .barcode-area {
-            margin: 15px 0 5px 0;
+            margin: 1mm 0 0 0;
             text-align: center;
             width: 100%;
         }
 
         .barcode-area svg {
             max-width: 100%; 
-            height: auto;
+            height: 7mm; 
             display: block;
             margin: 0 auto;
         }
 
         .barcode-number {
-            font-size: 1.1em; /* Letra legible para el número */
-            margin-top: 5px;
+            font-size: 9pt; 
+            margin-top: 0.5mm;
             font-weight: bold;
         }
-        
-        /* Botón de impresión (solo visible en pantalla) */
+
         .print-button {
-            width: 80%; 
-            padding: 10px; 
-            background-color: #007bff; 
-            color: white; 
-            border: none; 
-            border-radius: 5px;
-            cursor: pointer;
-            margin-top: 15px;
+            display: none !important; 
         }
 
         /* ==================================== */
-        /* ESTILOS PARA LA IMPRESIÓN (SOLUCIÓN a tamaño y visibilidad) */
+        /* ESTILOS PARA LA IMPRESIÓN (MÍNIMO ESPACIO: 5cm x 3cm) */
         /* ==================================== */
         @media print {
-            /* 1. Ocultar los selectores y el resto del cuerpo */
+            /* Ocultar la interfaz */
             body > *:not(.etiqueta-container) {
                 display: none;
             }
 
-            /* 2. Forzar que la etiqueta ocupe el espacio */
             body, html {
                 margin: 0;
                 padding: 0;
-                width: 80mm;
             }
             
             .etiqueta-container {
-                width: 80mm; /* Ancho fijo para impresión de recibo */
+                width: 50mm;
+                height: 30mm; 
                 margin: 0;
-                padding: 5px; /* Pequeño padding para el borde de la impresora */
-                border: none; /* Quitar el borde/sombra de la pantalla */
+                padding: 0.5mm; /* Padding mínimo */
+                border: none;
                 box-shadow: none;
-                
             }
             
-            /* 3. AUMENTAR EL TAMAÑO DE LA FUENTE EN LA IMPRESIÓN */
+            /* 3. Reducción EXTREMA de la fuente para caber */
             .info-line {
-                font-size: 18pt; /* Tamaño grande para texto de producto */
-                margin-bottom: 6px;
+                font-size: 6pt; /* Nombre del producto */
+                margin-bottom: 0.3mm;
+                padding-bottom: 0.1mm;
+                justify-content: flex-start;
             }
+
             .price-total {
-                font-size: 36pt; /* Tamaño MUY grande para el precio */
-                margin: 10pt 0 15pt 0;
+                font-size: 9pt; /* Precio total */
+                font-weight: 900;
+                margin: 0.5mm 0;
+                padding: 0;
+                border-top: 0.5px dashed #333;
+                padding-top: 0.5mm;
+                justify-content: flex-end;
             }
             
-            /* 4. Asegurar la impresión del SVG del código de barras */
+            /* 4. PRIORIDAD MÁXIMA: Código de Barras y Número */
+            .barcode-area {
+                margin: 1mm 0 0 0;
+            }
+            
             .barcode-area svg {
                 max-width: 100%; 
-                height: 55pt; /* Fijar altura en impresión para JsBarcode */
+                height: 9mm; /* Altura MÁXIMA para el código de barras */
                 display: block;
+                margin: 0 auto;
             }
             
             .barcode-number {
-                font-size: 14pt; /* Tamaño grande para el número bajo el código */
-                margin-top: 8pt;
-            }
-
-            /* 5. Asegurarse de que el botón de impresión dentro de la etiqueta desaparezca */
-            .print-button { 
-                display: none !important;
+                font-size: 11pt; /* Tamaño MÁXIMO para el número */
+                margin-top: 0.5mm;
+                font-weight: bold;
             }
         }
     </style>
