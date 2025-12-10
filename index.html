@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Generador de Etiquetas de Producto</title>
+    
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            padding: 20px;
+            background-color: #f4f4f9;
+        }
+        .container {
+            max-width: 600px;
+            margin: auto;
+            background: #fff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+        select, button {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 15px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            box-sizing: border-box;
+        }
+        label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+        }
+        
+        /* --- Estilos para la Etiqueta Generada --- */
+        #etiquetaGenerada {
+            margin-top: 30px;
+            padding: 20px;
+            border: 2px solid #333;
+            border-radius: 8px;
+            background-color: #fff;
+        }
+        .etiqueta-container h3 {
+            text-align: center;
+            border-bottom: 1px solid #ccc;
+            padding-bottom: 10px;
+            margin-top: 0;
+        }
+        .info-line {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 5px;
+        }
+        .info-line .label {
+            font-weight: bold;
+            color: #555;
+            flex-shrink: 0;
+            margin-right: 10px;
+        }
+        .info-line .value {
+            text-align: right;
+            font-weight: normal;
+        }
+        .price-total {
+            margin-top: 15px;
+            border-top: 2px dashed #333;
+            padding-top: 10px;
+        }
+        .price-total .label, .price-total .value {
+            font-size: 1.3em;
+            color: darkred;
+            font-weight: bold;
+        }
+        .barcode-area {
+            text-align: center;
+            margin-top: 20px;
+            padding-top: 10px;
+            border-top: 1px solid #ccc;
+        }
+        /* Estilo para el número debajo del código de barras */
+        .barcode-number {
+            font-family: monospace;
+            margin-top: 5px;
+            font-size: 1em;
+            letter-spacing: 1px;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <h1>Generador de Etiquetas de Productos</h1>
+        
+        <label for="tier">Seleccionar Tier:</label>
+        <select id="tier">
+            <option value="">-- Selecciona --</option>
+            <option value="T1">Tier 1</option>
+            <option value="T2">Tier 2</option>
+            <option value="T3">Tier 3</option>
+            <option value="T4">Tier 4</option>
+            <option value="T5">Tier 5</option>
+        </select>
+
+        <label for="familia">Seleccionar Familia:</label>
+        <select id="familia">
+            <option value="">-- Selecciona --</option>
+            </select>
+
+        <label for="productoFinal">Seleccionar Producto:</label>
+        <select id="productoFinal">
+            <option value="">-- Selecciona --</option>
+            </select>
+
+        <div id="etiquetaGenerada">
+            </div>
+
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/jsbarcode@3.11.6/dist/JsBarcode.all.min.js"></script> 
+
+    <script src="app.js?v=4"></script>
+
+</body>
+</html>
