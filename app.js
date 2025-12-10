@@ -1,11 +1,7 @@
-/**
- * =================================================================
- * ARCHIVO: app.js
- * Lógica: Tier -> Familia -> Producto
- * FINAL: Incluye catálogo completo, lógica de tres niveles, impresión 
- * solo de etiqueta (con restauración de estado) y código de barras SVG.
- * =================================================================
- */
+// =================================================================
+// ARCHIVO: app.js
+// Lógica: Tier -> Familia -> Producto (Corregido y minimalista)
+// =================================================================
 
 // =================================================================
 // 1. DATOS ORIGINALES DEL CATÁLOGO (RAW DATA)
@@ -163,38 +159,43 @@ const RAW_CATALOG_DATA = [
     { tier: "T5", descripcion: "MICAS PROGRESIVO NEWTON PLUS", precio: 261500.00, familia_key: "MI", graduacion_key: "GRAD", sku_con_apostrofe: "T5MicProNewPl", codigo_barra: "2000409299133" },
     { tier: "T5", descripcion: "MICAS PROGRE NEWPLUS+AR AZUL", precio: 300500.00, familia_key: "MI", graduacion_key: "GRAD", sku_con_apostrofe: "T5MicProNewPlArAz", codigo_barra: "2000409299140" },
     { tier: "T5", descripcion: "MICAS PROGRENEWPLUS+POLARIZADO", precio: 350500.00, familia_key: "MI", graduacion_key: "GRAD", sku_con_apostrofe: "T5MicProNewPlSol", codigo_barra: "2000409299157" },
-    { tier: "T5", descripcion: "MICAS PROGRENEWPLUS+FOTO", precio: 330500.00, familia_key: "MI", graduacion_key: "GRAD", sku_con_apostrofe: "T5MicProNewPlFo", codigo_barra: "2000409299164" },
+    { tier: "T5", descripcion: "MICAS PROGRESIVO NEWPLUS+FOTO", precio: 330500.00, familia_key: "MI", graduacion_key: "GRAD", sku_con_apostrofe: "T5MicProNewPlFo", codigo_barra: "2000409299164" },
     { tier: "T5", descripcion: "MICAS PROGRENEWPLUS+HI", precio: 310500.00, familia_key: "MI", graduacion_key: "GRAD", sku_con_apostrofe: "T5MicProNewPlHi", codigo_barra: "2000409299171" },
     { tier: "T5", descripcion: "MICAS PROGRNEWPLUS+HI+ARAZUL", precio: 349500.00, familia_key: "MI", graduacion_key: "GRAD", sku_con_apostrofe: "T5MicProNewPlHiArAz", codigo_barra: "2000409299195" }
 ];
 
 
 // =================================================================
-// 2. PROCESAMIENTO Y MAPPING
+// 2. PROCESAMIENTO Y MAPPING (SIMPLIFICADO)
 // =================================================================
 
 function processCatalogData(data) {
     const processedData = {};
     data.forEach(item => {
+        // Limpiamos el SKU para usarlo como una clave de producto limpia
         const cleanSku = item.sku_con_apostrofe.replace(/'/g, ''); 
-        // Usamos una clave más genérica, ya que el SKU final se simplificó.
-        const key = `${item.tier}_${item.familia_key}_${cleanSku}`; 
         
         if (!processedData[item.tier]) {
             processedData[item.tier] = {};
         }
+        
+        // La clave de la familia debe ser el valor que usamos en el selector: item.familia_key
+        if (!processedData[item.tier][item.familia_key]) {
+            processedData[item.tier][item.familia_key] = {};
+        }
 
-        processedData[item.tier][key] = {
+        // Usamos el SKU limpio como clave final del producto
+        processedData[item.tier][item.familia_key][cleanSku] = {
             descripcion: item.descripcion,
             precio: item.precio,
             sku: cleanSku, 
-            codigo_barra: item.codigo_barra, 
-            familia_key: item.familia_key
+            codigo_barra: item.codigo_barra
         };
     });
     return processedData;
 }
 
+// CATALOG_DATA es ahora un objeto de 3 niveles: Tier -> Familia -> {Productos}
 const CATALOG_DATA = processCatalogData(RAW_CATALOG_DATA);
 
 const FAMILIA_OPTIONS = {
@@ -214,6 +215,7 @@ document.addEventListener('DOMContentLoaded', () => {
     document.getElementById('tier').addEventListener('change', updateFamiliaOptions);
     document.getElementById('familia').addEventListener('change', updateProductOptions);
     document.getElementById('productoFinal').addEventListener('change', generateEtiqueta);
+    // Inicializar las opciones al cargar la página
     updateFamiliaOptions(); 
 });
 
@@ -223,28 +225,20 @@ function updateFamiliaOptions() {
     const familiaSelect = document.getElementById('familia');
     familiaSelect.innerHTML = '<option value="">-- Selecciona --</option>';
 
-    if (!tier) {
-        updateProductOptions();
-        return;
+    if (tier && CATALOG_DATA[tier]) {
+        const availableFamilias = Object.keys(CATALOG_DATA[tier]);
+
+        const sortedFamilias = availableFamilias.sort((a, b) => {
+            return (FAMILIA_OPTIONS[a] || a).localeCompare(FAMILIA_OPTIONS[b] || b);
+        });
+
+        sortedFamilias.forEach(key => {
+            const option = document.createElement('option');
+            option.value = key;
+            option.textContent = FAMILIA_OPTIONS[key] || key;
+            familiaSelect.appendChild(option);
+        });
     }
-
-    const availableFamilias = new Set();
-    for (const key in CATALOG_DATA[tier]) {
-        if (CATALOG_DATA[tier].hasOwnProperty(key)) {
-            availableFamilias.add(CATALOG_DATA[tier][key].familia_key);
-        }
-    }
-
-    const sortedFamilias = Array.from(availableFamilias).sort((a, b) => {
-        return FAMILIA_OPTIONS[a].localeCompare(FAMILIA_OPTIONS[b]);
-    });
-
-    sortedFamilias.forEach(key => {
-        const option = document.createElement('option');
-        option.value = key;
-        option.textContent = FAMILIA_OPTIONS[key] || key;
-        familiaSelect.appendChild(option);
-    });
 
     updateProductOptions();
 }
@@ -256,27 +250,26 @@ function updateProductOptions() {
     const productoSelect = document.getElementById('productoFinal');
     productoSelect.innerHTML = '<option value="">-- Selecciona --</option>';
 
-    if (!tier || !familiaKey) {
+    if (!tier || !familiaKey || !CATALOG_DATA[tier] || !CATALOG_DATA[tier][familiaKey]) {
         document.getElementById('etiquetaGenerada').innerHTML = '';
         return;
     }
 
+    const products = CATALOG_DATA[tier][familiaKey];
     const filteredProducts = {};
 
-    for (const key in CATALOG_DATA[tier]) {
-        const product = CATALOG_DATA[tier][key];
+    for (const sku in products) {
+        const product = products[sku];
         
-        if (product.familia_key === familiaKey) {
-            
-            const precioFormateado = product.precio.toLocaleString('es-CL', {
-                style: 'currency',
-                currency: 'CLP',
-                minimumFractionDigits: 0
-            });
-            
-            const optionText = `${product.descripcion} (${precioFormateado})`;
-            filteredProducts[key] = optionText;
-        }
+        const precioFormateado = product.precio.toLocaleString('es-CL', {
+            style: 'currency',
+            currency: 'CLP',
+            minimumFractionDigits: 0
+        });
+        
+        // Usamos el SKU limpio como la clave del producto
+        const optionText = `${product.descripcion} (${precioFormateado})`;
+        filteredProducts[sku] = optionText;
     }
 
     const sortedKeys = Object.keys(filteredProducts).sort((a, b) => {
@@ -296,15 +289,16 @@ function updateProductOptions() {
 
 function generateEtiqueta() {
     const tier = document.getElementById('tier').value;
-    const fullKey = document.getElementById('productoFinal').value;
+    const sku = document.getElementById('productoFinal').value;
+    const familiaKey = document.getElementById('familia').value;
     const etiquetaContainer = document.getElementById('etiquetaGenerada');
 
-    if (!tier || !fullKey) {
+    if (!tier || !sku || !familiaKey) {
         etiquetaContainer.innerHTML = '';
         return;
     }
 
-    const selectedProduct = CATALOG_DATA[tier][fullKey];
+    const selectedProduct = CATALOG_DATA[tier][familiaKey][sku];
 
     const precioFormateado = selectedProduct.precio.toLocaleString('es-CL', {
         style: 'currency',
@@ -312,14 +306,14 @@ function generateEtiqueta() {
         minimumFractionDigits: 0
     });
 
-    // 1. GENERAR SVG del Código de Barras (para compatibilidad universal, especialmente iOS)
+    // 1. GENERAR SVG del Código de Barras
     let barcodeSvgString = '';
     if (typeof JsBarcode !== 'undefined') {
         const svgElement = document.createElementNS("http://www.w3.org/2000/svg", "svg");
         
         JsBarcode(svgElement, selectedProduct.codigo_barra, {
             format: "EAN13", 
-            displayValue: false, 
+            displayValue: false, // NO mostrar el número dentro del SVG
             height: 50,
             margin: 5,
             xmlDocument: document 
@@ -329,17 +323,15 @@ function generateEtiqueta() {
         console.error("JsBarcode no está cargado.");
     }
 
-    // 2. CONSTRUIR HTML de la etiqueta
+    // 2. CONSTRUIR HTML de la etiqueta (Minimalista: SOLO VALORES)
     const etiquetaHTML = `
         <div id="printableArea" class="etiqueta-container">
             
-            <div class="info-line">
-                <span class="label">Producto:</span>
+            <div class="info-line product-name-line">
                 <span class="value">${selectedProduct.descripcion}</span>
             </div>
             
             <div class="info-line price-total">
-                <span class="label">TOTAL DE LA VENTA:</span>
                 <span class="value">${precioFormateado}</span>
             </div>
 
@@ -349,8 +341,7 @@ function generateEtiqueta() {
             </div>
 
             <div style="text-align: center; margin-top: 15px;">
-                <button onclick="printEtiqueta()" class="print-button"
-                        style="width: 80%; padding: 10px; background-color: #007bff; color: white; border: none; cursor: pointer;">
+                <button onclick="printEtiqueta()" class="print-button">
                     Imprimir Etiqueta
                 </button>
             </div>
@@ -374,64 +365,40 @@ function printEtiqueta() {
         return;
     }
 
-    const content = printableArea.outerHTML; // Obtiene el HTML incluyendo el contenedor
-    const originalBody = document.body.innerHTML;
+    const printContents = printableArea.outerHTML;
 
-    // 1. Temporalmente almacena los valores de los selectores antes de borrar el DOM
-    const tierValue = document.getElementById('tier').value;
-    const familiaValue = document.getElementById('familia').value;
-    const productoValue = document.getElementById('productoFinal').value;
+    const printWindow = window.open('', '_blank', 'height=400,width=400');
     
-    // 2. Reemplaza el contenido del cuerpo para imprimir SÓLO la etiqueta
-    document.body.innerHTML = content;
+    printWindow.document.write('<html><head><title>Imprimir Etiqueta</title>');
+    
+    // Copiar estilos del CSS de index.html
+    const styles = Array.from(document.styleSheets)
+        .map(sheet => {
+            try {
+                if (sheet.href) return `<link rel="stylesheet" href="${sheet.href}">`;
+                return `<style>${Array.from(sheet.cssRules).map(rule => rule.cssText).join('')}</style>`;
+            } catch (e) {
+                return ''; 
+            }
+        }).join('');
+    
+    printWindow.document.write(styles);
+    printWindow.document.write('</head><body>');
+    printWindow.document.write(printContents);
+    printWindow.document.write('</body></html>');
+    printWindow.document.close();
 
-    // 3. Estilos temporales para la impresión (ocultar botón y definir ancho)
-    const tempStyle = document.createElement('style');
-    tempStyle.textContent = `
-        /* Oculta el botón en la impresión */
-        .print-button {
-            display: none !important;
-        }
-        /* Asegura el ancho de etiqueta para la impresión */
-        .etiqueta-container {
-            width: 80mm; /* Adaptado al ancho típico de etiqueta/recibo */
-            padding: 5px; 
-            border: 0;
-            box-shadow: none; 
-            margin: 0;
-        }
-    `;
-    document.head.appendChild(tempStyle);
-
-    // 4. Imprimir
-    window.print();
-
-    // 5. Restaura el contenido original y remueve el estilo temporal
-    document.body.innerHTML = originalBody;
-    document.head.removeChild(tempStyle);
+    // Esperar a que el SVG se renderice antes de imprimir
+    printWindow.onload = () => {
+        printWindow.print();
+        printWindow.close();
+    };
     
-    // 6. RESTAURAR el estado y la interactividad de la aplicación (Repoblación de selectores)
-    
-    // Restaurar los listeners (DOM recién reconstruido necesita nuevos listeners)
-    document.getElementById('tier').addEventListener('change', updateFamiliaOptions);
-    document.getElementById('familia').addEventListener('change', updateProductOptions);
-    document.getElementById('productoFinal').addEventListener('change', generateEtiqueta);
-    
-    // Restaurar los valores de los selectores
-    document.getElementById('tier').value = tierValue;
-    
-    // Llamar a las funciones de actualización para reconstruir las opciones
-    updateFamiliaOptions(); 
-    
-    // Usar setTimeout para permitir que el DOM se actualice antes de seleccionar los valores
+    // Timeout como fallback
     setTimeout(() => {
-        document.getElementById('familia').value = familiaValue;
-        updateProductOptions();
-        
-        setTimeout(() => {
-            document.getElementById('productoFinal').value = productoValue;
-            // Vuelve a generar la etiqueta con el botón (para restaurar el estado visual)
-            generateEtiqueta(); 
-        }, 50); // Pequeño retraso
-    }, 50);
+        if (!printWindow.closed) {
+             printWindow.print();
+             printWindow.close();
+        }
+    }, 500); 
 }
