@@ -2,12 +2,13 @@
  * =================================================================
  * ARCHIVO: app.js
  * Lógica: Tier -> Familia -> Producto
- * ACTUALIZACIÓN: Se agregó el botón de imprimir y la función printEtiqueta().
+ * FINAL: Incluye catálogo completo, lógica de tres niveles, impresión 
+ * solo de etiqueta (con restauración de estado) y código de barras SVG.
  * =================================================================
  */
 
 // =================================================================
-// 1. DATOS ORIGINALES DEL CATÁLOGO (RAW DATA) - (Se mantiene igual)
+// 1. DATOS ORIGINALES DEL CATÁLOGO (RAW DATA)
 // =================================================================
 
 const RAW_CATALOG_DATA = [
@@ -169,14 +170,15 @@ const RAW_CATALOG_DATA = [
 
 
 // =================================================================
-// 2. PROCESAMIENTO Y MAPPING - (Se mantiene igual)
+// 2. PROCESAMIENTO Y MAPPING
 // =================================================================
 
 function processCatalogData(data) {
     const processedData = {};
     data.forEach(item => {
         const cleanSku = item.sku_con_apostrofe.replace(/'/g, ''); 
-        const key = `${item.tier}_${item.familia_key}_${cleanSku}`;
+        // Usamos una clave más genérica, ya que el SKU final se simplificó.
+        const key = `${item.tier}_${item.familia_key}_${cleanSku}`; 
         
         if (!processedData[item.tier]) {
             processedData[item.tier] = {};
@@ -205,7 +207,7 @@ const FAMILIA_OPTIONS = {
 
 
 // =================================================================
-// 3. EVENTOS Y LÓGICA DE LA APLICACIÓN - (Se mantiene igual)
+// 3. EVENTOS Y LÓGICA DE LA APLICACIÓN
 // =================================================================
 
 document.addEventListener('DOMContentLoaded', () => {
@@ -310,8 +312,24 @@ function generateEtiqueta() {
         minimumFractionDigits: 0
     });
 
-    // Añadimos el ID 'printableArea' al contenedor principal de la etiqueta
-    // y el botón de impresión.
+    // 1. GENERAR SVG del Código de Barras (para compatibilidad universal, especialmente iOS)
+    let barcodeSvgString = '';
+    if (typeof JsBarcode !== 'undefined') {
+        const svgElement = document.createElementNS("http://www.w3.org/2000/svg", "svg");
+        
+        JsBarcode(svgElement, selectedProduct.codigo_barra, {
+            format: "EAN13", 
+            displayValue: false, 
+            height: 50,
+            margin: 5,
+            xmlDocument: document 
+        });
+        barcodeSvgString = svgElement.outerHTML;
+    } else {
+        console.error("JsBarcode no está cargado.");
+    }
+
+    // 2. CONSTRUIR HTML de la etiqueta
     const etiquetaHTML = `
         <div id="printableArea" class="etiqueta-container">
             
@@ -326,12 +344,12 @@ function generateEtiqueta() {
             </div>
 
             <div class="barcode-area">
-                <canvas id="barcodeCanvas"></canvas>
+                ${barcodeSvgString} 
                 <div class="barcode-number">${selectedProduct.codigo_barra}</div>
             </div>
 
             <div style="text-align: center; margin-top: 15px;">
-                <button onclick="printEtiqueta()" 
+                <button onclick="printEtiqueta()" class="print-button"
                         style="width: 80%; padding: 10px; background-color: #007bff; color: white; border: none; cursor: pointer;">
                     Imprimir Etiqueta
                 </button>
@@ -341,63 +359,79 @@ function generateEtiqueta() {
     `;
 
     etiquetaContainer.innerHTML = etiquetaHTML;
-
-    // Generar Código de Barras usando JsBarcode
-    if (typeof JsBarcode !== 'undefined') {
-        JsBarcode("#barcodeCanvas", selectedProduct.codigo_barra, {
-            format: "EAN13", 
-            displayValue: false, 
-            height: 50,
-            margin: 5
-        });
-    } else {
-        console.error("JsBarcode no está cargado.");
-    }
 }
 
 
 // =================================================================
-// 4. FUNCIÓN DE IMPRESIÓN
+// 4. FUNCIÓN DE IMPRESIÓN (SOLO ETIQUETA)
 // =================================================================
 
 function printEtiqueta() {
-    const content = document.getElementById('printableArea').innerHTML;
+    const printableArea = document.getElementById('printableArea');
+    
+    if (!printableArea) {
+        alert("No hay etiqueta generada para imprimir.");
+        return;
+    }
+
+    const content = printableArea.outerHTML; // Obtiene el HTML incluyendo el contenedor
     const originalBody = document.body.innerHTML;
 
-    // Temporalmente reemplaza el contenido del cuerpo para imprimir solo la etiqueta
+    // 1. Temporalmente almacena los valores de los selectores antes de borrar el DOM
+    const tierValue = document.getElementById('tier').value;
+    const familiaValue = document.getElementById('familia').value;
+    const productoValue = document.getElementById('productoFinal').value;
+    
+    // 2. Reemplaza el contenido del cuerpo para imprimir SÓLO la etiqueta
     document.body.innerHTML = content;
 
-    // Estilos temporales para que se imprima correctamente (evitando estilos de la interfaz)
-    // Nota: Es mejor usar media queries en el CSS, pero esto es un arreglo rápido
+    // 3. Estilos temporales para la impresión (ocultar botón y definir ancho)
     const tempStyle = document.createElement('style');
     tempStyle.textContent = `
-        .etiqueta-container {
-            width: 80mm; /* Ancho típico de una impresora de etiquetas/recibos */
-            padding: 5px; 
-            border: 0; /* Quita el borde de la interfaz */
-            box-shadow: none; 
+        /* Oculta el botón en la impresión */
+        .print-button {
+            display: none !important;
         }
-        button {
-            display: none !important; /* Oculta el botón en la impresión */
+        /* Asegura el ancho de etiqueta para la impresión */
+        .etiqueta-container {
+            width: 80mm; /* Adaptado al ancho típico de etiqueta/recibo */
+            padding: 5px; 
+            border: 0;
+            box-shadow: none; 
+            margin: 0;
         }
     `;
     document.head.appendChild(tempStyle);
 
+    // 4. Imprimir
     window.print();
 
-    // Restaura el contenido original de la página y remueve el estilo temporal
+    // 5. Restaura el contenido original y remueve el estilo temporal
     document.body.innerHTML = originalBody;
     document.head.removeChild(tempStyle);
     
-    // Es necesario recargar el estado de los selectores y listeners después de restaurar el DOM
-    document.addEventListener('DOMContentLoaded', () => {
-        document.getElementById('tier').addEventListener('change', updateFamiliaOptions);
-        document.getElementById('familia').addEventListener('change', updateProductOptions);
-        document.getElementById('productoFinal').addEventListener('change', generateEtiqueta);
-    }, { once: true });
+    // 6. RESTAURAR el estado y la interactividad de la aplicación (Repoblación de selectores)
     
-    // Esto es un parche avanzado para restaurar la interactividad de la página
-    // después de window.print(). Lo más fácil es simplemente forzar la recarga
-    // después de la impresión si la restauración del DOM da problemas.
-    window.location.reload(); 
+    // Restaurar los listeners (DOM recién reconstruido necesita nuevos listeners)
+    document.getElementById('tier').addEventListener('change', updateFamiliaOptions);
+    document.getElementById('familia').addEventListener('change', updateProductOptions);
+    document.getElementById('productoFinal').addEventListener('change', generateEtiqueta);
+    
+    // Restaurar los valores de los selectores
+    document.getElementById('tier').value = tierValue;
+    
+    // Llamar a las funciones de actualización para reconstruir las opciones
+    updateFamiliaOptions(); 
+    
+    // Usar setTimeout para permitir que el DOM se actualice antes de seleccionar los valores
+    setTimeout(() => {
+        document.getElementById('familia').value = familiaValue;
+        updateProductOptions();
+        
+        setTimeout(() => {
+            document.getElementById('productoFinal').value = productoValue;
+            // Vuelve a generar la etiqueta con el botón (para restaurar el estado visual)
+            generateEtiqueta(); 
+        }, 50); // Pequeño retraso
+    }, 50);
 }
