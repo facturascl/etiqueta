@@ -3,123 +3,226 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Generador de Etiquetas de Producto</title>
+    <title>Generador de Etiquetas de Productos</title>
+    
+    <script src="https://cdn.jsdelivr.net/npm/jsbarcode@3.11.6/dist/JsBarcode.all.min.js"></script>
     
     <style>
+        /* ==================================== */
+        /* ESTILOS GENERALES DE LA PÁGINA */
+        /* ==================================== */
         body {
             font-family: Arial, sans-serif;
-            padding: 20px;
-            background-color: #f4f4f9;
+            margin: 20px;
+            background-color: #f4f4f4;
+            color: #333;
         }
+
         .container {
-            max-width: 600px;
+            max-width: 900px;
             margin: auto;
             background: #fff;
-            padding: 20px;
+            padding: 30px;
             border-radius: 8px;
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
         }
-        select, button {
+
+        h1 {
+            text-align: center;
+            color: #5d2b5d; /* Color principal */
+            margin-bottom: 30px;
+            border-bottom: 2px solid #5d2b5d;
+            padding-bottom: 10px;
+        }
+
+        .selector-group {
+            margin-bottom: 20px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: bold;
+            color: #555;
+        }
+
+        select {
             width: 100%;
-            padding: 10px;
-            margin-bottom: 15px;
+            padding: 12px;
             border: 1px solid #ccc;
             border-radius: 4px;
             box-sizing: border-box;
+            font-size: 16px;
+            appearance: none; /* Eliminar estilo nativo en algunos navegadores */
+            background-color: #fff;
         }
-        label {
-            display: block;
+
+        select:focus {
+            border-color: #5d2b5d;
+            outline: none;
+            box-shadow: 0 0 0 3px rgba(93, 43, 93, 0.2);
+        }
+
+        /* ==================================== */
+        /* ESTILOS DE LA ETIQUETA */
+        /* ==================================== */
+        .etiqueta-container {
+            width: 80mm; /* Ancho de la etiqueta (8cm) */
+            padding: 10px;
+            margin: 40px auto; /* Espacio y centrado en pantalla */
+            border: 1px dashed #aaa;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            background-color: #fff;
+        }
+
+        .info-line {
+            font-size: 1.5em; /* Tamaño de fuente para las líneas de información */
             margin-bottom: 5px;
+            display: flex; 
+            justify-content: space-between; 
+            border-bottom: 1px dashed #333;
+            padding-bottom: 3px;
+        }
+
+        .info-line .label {
+            font-weight: normal;
+        }
+
+        .info-line .value {
+            font-weight: bold;
+            text-align: right;
+            margin-left: 10px;
+        }
+
+        .price-total {
+            font-size: 2.2em; /* Tamaño grande para el precio total en pantalla */
+            font-weight: 900;
+            color: #333;
+            margin: 15px 0;
+            border: none;
+            padding-bottom: 0;
+        }
+
+        .barcode-area {
+            margin: 15px 0 5px 0;
+            text-align: center;
+            width: 100%;
+        }
+
+        .barcode-area svg {
+            max-width: 100%; 
+            height: auto;
+            display: block;
+            margin: 0 auto;
+        }
+
+        .barcode-number {
+            font-size: 1.1em; /* Letra legible para el número */
+            margin-top: 5px;
             font-weight: bold;
         }
         
-        /* --- Estilos para la Etiqueta Generada --- */
-        #etiquetaGenerada {
-            margin-top: 30px;
-            padding: 20px;
-            border: 2px solid #333;
-            border-radius: 8px;
-            background-color: #fff;
-        }
-        .etiqueta-container h3 {
-            text-align: center;
-            border-bottom: 1px solid #ccc;
-            padding-bottom: 10px;
-            margin-top: 0;
-        }
-        .info-line {
-            display: flex;
-            justify-content: space-between;
-            margin-bottom: 5px;
-        }
-        .info-line .label {
-            font-weight: bold;
-            color: #555;
-            flex-shrink: 0;
-            margin-right: 10px;
-        }
-        .info-line .value {
-            text-align: right;
-            font-weight: normal;
-        }
-        .price-total {
+        /* Botón de impresión (solo visible en pantalla) */
+        .print-button {
+            width: 80%; 
+            padding: 10px; 
+            background-color: #007bff; 
+            color: white; 
+            border: none; 
+            border-radius: 5px;
+            cursor: pointer;
             margin-top: 15px;
-            border-top: 2px dashed #333;
-            padding-top: 10px;
         }
-        .price-total .label, .price-total .value {
-            font-size: 1.3em;
-            color: darkred;
-            font-weight: bold;
-        }
-        .barcode-area {
-            text-align: center;
-            margin-top: 20px;
-            padding-top: 10px;
-            border-top: 1px solid #ccc;
-        }
-        /* Estilo para el número debajo del código de barras */
-        .barcode-number {
-            font-family: monospace;
-            margin-top: 5px;
-            font-size: 1em;
-            letter-spacing: 1px;
+
+        /* ==================================== */
+        /* ESTILOS PARA LA IMPRESIÓN (SOLUCIÓN a tamaño y visibilidad) */
+        /* ==================================== */
+        @media print {
+            /* 1. Ocultar los selectores y el resto del cuerpo */
+            body > *:not(.etiqueta-container) {
+                display: none;
+            }
+
+            /* 2. Forzar que la etiqueta ocupe el espacio */
+            body, html {
+                margin: 0;
+                padding: 0;
+                width: 80mm;
+            }
+            
+            .etiqueta-container {
+                width: 80mm; /* Ancho fijo para impresión de recibo */
+                margin: 0;
+                padding: 5px; /* Pequeño padding para el borde de la impresora */
+                border: none; /* Quitar el borde/sombra de la pantalla */
+                box-shadow: none;
+                
+            }
+            
+            /* 3. AUMENTAR EL TAMAÑO DE LA FUENTE EN LA IMPRESIÓN */
+            .info-line {
+                font-size: 18pt; /* Tamaño grande para texto de producto */
+                margin-bottom: 6px;
+            }
+            .price-total {
+                font-size: 36pt; /* Tamaño MUY grande para el precio */
+                margin: 10pt 0 15pt 0;
+            }
+            
+            /* 4. Asegurar la impresión del SVG del código de barras */
+            .barcode-area svg {
+                max-width: 100%; 
+                height: 55pt; /* Fijar altura en impresión para JsBarcode */
+                display: block;
+            }
+            
+            .barcode-number {
+                font-size: 14pt; /* Tamaño grande para el número bajo el código */
+                margin-top: 8pt;
+            }
+
+            /* 5. Asegurarse de que el botón de impresión dentro de la etiqueta desaparezca */
+            .print-button { 
+                display: none !important;
+            }
         }
     </style>
 </head>
 <body>
-
     <div class="container">
         <h1>Generador de Etiquetas de Productos</h1>
+
+        <div class="selector-group">
+            <label for="tier">Seleccionar Tier:</label>
+            <select id="tier">
+                <option value="">-- Selecciona --</option>
+                <option value="T1">Tier 1</option>
+                <option value="T2">Tier 2</option>
+                <option value="T3">Tier 3</option>
+                <option value="T4">Tier 4</option>
+                <option value="T5">Tier 5</option>
+            </select>
+        </div>
+
+        <div class="selector-group">
+            <label for="familia">Seleccionar Familia:</label>
+            <select id="familia">
+                <option value="">-- Selecciona --</option>
+                </select>
+        </div>
+
+        <div class="selector-group">
+            <label for="productoFinal">Seleccionar Producto Final:</label>
+            <select id="productoFinal">
+                <option value="">-- Selecciona --</option>
+                </select>
+        </div>
         
-        <label for="tier">Seleccionar Tier:</label>
-        <select id="tier">
-            <option value="">-- Selecciona --</option>
-            <option value="T1">Tier 1</option>
-            <option value="T2">Tier 2</option>
-            <option value="T3">Tier 3</option>
-            <option value="T4">Tier 4</option>
-            <option value="T5">Tier 5</option>
-        </select>
-
-        <label for="familia">Seleccionar Familia:</label>
-        <select id="familia">
-            <option value="">-- Selecciona --</option>
-            </select>
-
-        <label for="productoFinal">Seleccionar Producto:</label>
-        <select id="productoFinal">
-            <option value="">-- Selecciona --</option>
-            </select>
-
-        <div id="etiquetaGenerada">
+        <div id="etiquetaGenerada" style="min-height: 200px;">
             </div>
 
     </div>
 
-    <script src="https://cdn.jsdelivr.net/npm/jsbarcode@3.11.6/dist/JsBarcode.all.min.js"></script> 
-
-    <script src="app.js?v=4"></script>
-
+    <script src="app.js"></script>
 </body>
 </html>
