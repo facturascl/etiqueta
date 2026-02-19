@@ -10,7 +10,7 @@
 
 const RAW_CATALOG_DATA = [
     // TIER 1
-    { tier: "T1", descripcion: "CLIP - ONS", precio: 40000.00, familia_key: "NG", graduacion_key: "NOGRAD", sku_con_apostrofe: "T1ClpOn", codigo_barra: "2000409297917" },
+    { tier: "T1", descripcion: "CLIP - ONS", precio: 32000.00, familia_key: "NG", graduacion_key: "NOGRAD", sku_con_apostrofe: "T1ClpOn", codigo_barra: "2000409297917" },
     { tier: "T1", descripcion: "LENT1 NEUTROS CON AR VERDE", precio: 89000.00, familia_key: "NG", graduacion_key: "NOGRAD", sku_con_apostrofe: "T1LeNeArVr", codigo_barra: "2000409297924" },
     { tier: "T1", descripcion: "LENT1 DE SOL NEUTRO", precio: 89000.00, familia_key: "NG", graduacion_key: "NOGRAD", sku_con_apostrofe: "T1LeNeSol", codigo_barra: "2000409297931" },
     { tier: "T1", descripcion: "LENT1 PA LA COMPU NEUTROS", precio: 89000.00, familia_key: "NG", graduacion_key: "NOGRAD", sku_con_apostrofe: "T1LeNeCom", codigo_barra: "2000409297948" },
