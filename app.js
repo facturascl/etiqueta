@@ -11,13 +11,13 @@
 const RAW_CATALOG_DATA = [
     // TIER 1
     { tier: "T1", descripcion: "CLIP - ONS", precio: 32000.00, familia_key: "NG", graduacion_key: "NOGRAD", sku_con_apostrofe: "T1ClpOn", codigo_barra: "2000409297917" },
-    { tier: "T1", descripcion: "LENT1 NEUTROS CON AR VERDE", precio: 71200.00, familia_key: "NG", graduacion_key: "NOGRAD", sku_con_apostrofe: "T1LeNeArVr", codigo_barra: "2000409297924" },
+    { tier: "T1", descripcion: "LENT1 NEUTROS CON AR VERDE", precio: 89000.00, familia_key: "NG", graduacion_key: "NOGRAD", sku_con_apostrofe: "T1LeNeArVr", codigo_barra: "2000409297924" },
     { tier: "T1", descripcion: "LENT1 DE SOL NEUTRO", precio: 71200.00, familia_key: "NG", graduacion_key: "NOGRAD", sku_con_apostrofe: "T1LeNeSol", codigo_barra: "2000409297931" },
     { tier: "T1", descripcion: "LENT1 PA LA COMPU NEUTROS", precio: 71200.00, familia_key: "NG", graduacion_key: "NOGRAD", sku_con_apostrofe: "T1LeNeCom", codigo_barra: "2000409297948" },
     
     { tier: "T1", descripcion: "LENT1 MONOFOCAL+AR AZUL", precio: 120200.00, familia_key: "MO", graduacion_key: "GRAD", sku_con_apostrofe: "T1LeMoArAz", codigo_barra: "2000409297955" },
     { tier: "T1", descripcion: "LENT1 MONOFOCAL+HI", precio: 128200.00, familia_key: "MO", graduacion_key: "GRAD", sku_con_apostrofe: "T1LeMoHi", codigo_barra: "2000409297962" },
-    { tier: "T1", descripcion: "LENT1 MONO+ARAZUL+HI", precio: 160200.00, familia_key: "MO", graduacion_key: "GRAD", sku_con_apostrofe: "T1LeMoArAzHi", codigo_barra: "2000409297979" },
+    { tier: "T1", descripcion: "LENT1 MONO+ARAZUL+HI", precio: 159400.00, familia_key: "MO", graduacion_key: "GRAD", sku_con_apostrofe: "T1LeMoArAzHi", codigo_barra: "2000409297979" },
     { tier: "T1", descripcion: "LENT1 DE SOL GRADUADOS", precio: 188000.00, familia_key: "MO", graduacion_key: "GRAD", sku_con_apostrofe: "T1LeMoSol", codigo_barra: "2000409297986" },
     { tier: "T1", descripcion: "LENT1 MONOFOCAL FOTO", precio: 144200.00, familia_key: "MO", graduacion_key: "GRAD", sku_con_apostrofe: "T1LeMoFo", codigo_barra: "2000409297993" },
     
@@ -38,13 +38,13 @@ const RAW_CATALOG_DATA = [
     { tier: "T1", descripcion: "LENT1 PROGRE NEWPLUS+HI+ARAZUL", precio: 334600.00, familia_key: "NP", graduacion_key: "GRAD", sku_con_apostrofe: "T1LeProNewPlHiArAz", codigo_barra: "2000409298136" },
 
     // TIER 2
-    { tier: "T2", descripcion: "LENT2 NEUTROS CON AR VERDE", precio: 81200.00, familia_key: "NG", graduacion_key: "NOGRAD", sku_con_apostrofe: "T2LeNeArVr", codigo_barra: "2000409298143" },
-    { tier: "T2", descripcion: "LENT2 DE SOL NEUTRO", precio: 81200.00, familia_key: "NG", graduacion_key: "NOGRAD", sku_con_apostrofe: "T2LeNeSol", codigo_barra: "2000409298150" },
-    { tier: "T2", descripcion: "LENT2 PA LA COMPU NEUTROS", precio: 81200.00, familia_key: "NG", graduacion_key: "NOGRAD", sku_con_apostrofe: "T2LeNeCom", codigo_barra: "2000409298167" },
+    { tier: "T2", descripcion: "LENT2 NEUTROS CON AR VERDE", precio: 99000.00, familia_key: "NG", graduacion_key: "NOGRAD", sku_con_apostrofe: "T2LeNeArVr", codigo_barra: "2000409298143" },
+    { tier: "T2", descripcion: "LENT2 DE SOL NEUTRO", precio: 79200.00, familia_key: "NG", graduacion_key: "NOGRAD", sku_con_apostrofe: "T2LeNeSol", codigo_barra: "2000409298150" },
+    { tier: "T2", descripcion: "LENT2 PA LA COMPU NEUTROS", precio: 79200.00, familia_key: "NG", graduacion_key: "NOGRAD", sku_con_apostrofe: "T2LeNeCom", codigo_barra: "2000409298167" },
     
     { tier: "T2", descripcion: "LENT2 MONOFOCAL + AR AZUL", precio: 130200.00, familia_key: "MO", graduacion_key: "GRAD", sku_con_apostrofe: "T2LeMoArAz", codigo_barra: "2000409298174" },
     { tier: "T2", descripcion: "LENT2 MONOFOCAL + HI", precio: 138200.00, familia_key: "MO", graduacion_key: "GRAD", sku_con_apostrofe: "T2LeMoHi", codigo_barra: "2000409298181" },
-    { tier: "T2", descripcion: "LENT2 MONO + AR AZUL + HI", precio: 170200.00, familia_key: "MO", graduacion_key: "GRAD", sku_con_apostrofe: "T2LeMoArAzHi", codigo_barra: "2000409298198" },
+    { tier: "T2", descripcion: "LENT2 MONO + AR AZUL + HI", precio: 169400.00, familia_key: "MO", graduacion_key: "GRAD", sku_con_apostrofe: "T2LeMoArAzHi", codigo_barra: "2000409298198" },
     { tier: "T2", descripcion: "LENT2 DE SOL GRADUADOS", precio: 188000.00, familia_key: "MO", graduacion_key: "GRAD", sku_con_apostrofe: "T2LeMoSol", codigo_barra: "2000409298204" },
     { tier: "T2", descripcion: "LENT2 MONOFOCAL FOTO", precio: 154200.00, familia_key: "MO", graduacion_key: "GRAD", sku_con_apostrofe: "T2LeMoFo", codigo_barra: "2000409298211" },
     
@@ -65,13 +65,13 @@ const RAW_CATALOG_DATA = [
     { tier: "T2", descripcion: "LENT2 PROGRE NEWPLUS+HI+ARAZUL", precio: 344600.00, familia_key: "NP", graduacion_key: "GRAD", sku_con_apostrofe: "T2LeProNewPlHiArAz", codigo_barra: "2000409298358" },
     
     // TIER 3
-    { tier: "T3", descripcion: "LENT3 NEUTROS CON AR VERDE", precio: 101200.00, familia_key: "NG", graduacion_key: "NOGRAD", sku_con_apostrofe: "T3LeNeArVr", codigo_barra: "2000409298365" },
-    { tier: "T3", descripcion: "LENT3 DE SOL NEUTRO", precio: 101200.00, familia_key: "NG", graduacion_key: "NOGRAD", sku_con_apostrofe: "T3LeNeSol", codigo_barra: "2000409298372" },
-    { tier: "T3", descripcion: "LENT3 PA LA COMPU NEUTROS", precio: 101200.00, familia_key: "NG", graduacion_key: "NOGRAD", sku_con_apostrofe: "T3LeNeCom", codigo_barra: "2000409298389" },
+    { tier: "T3", descripcion: "LENT3 NEUTROS CON AR VERDE", precio: 119000.00, familia_key: "NG", graduacion_key: "NOGRAD", sku_con_apostrofe: "T3LeNeArVr", codigo_barra: "2000409298365" },
+    { tier: "T3", descripcion: "LENT3 DE SOL NEUTRO", precio:  95200.00, familia_key: "NG", graduacion_key: "NOGRAD", sku_con_apostrofe: "T3LeNeSol", codigo_barra: "2000409298372" },
+    { tier: "T3", descripcion: "LENT3 PA LA COMPU NEUTROS", precio: 95200.00, familia_key: "NG", graduacion_key: "NOGRAD", sku_con_apostrofe: "T3LeNeCom", codigo_barra: "2000409298389" },
     
     { tier: "T3", descripcion: "LENT3 MONOFOCAL + AR AZUL", precio:  150200.00, familia_key: "MO", graduacion_key: "GRAD", sku_con_apostrofe: "T3LeMoArAz", codigo_barra: "2000409298396" },
     { tier: "T3", descripcion: "LENT3 MONOFOCAL + HI", precio: 158200.00, familia_key: "MO", graduacion_key: "GRAD", sku_con_apostrofe: "T3LeMoHi", codigo_barra: "2000409298402" },
-    { tier: "T3", descripcion: "LENT3 MONO + AR AZUL + HI", precio: 190200.00, familia_key: "MO", graduacion_key: "GRAD", sku_con_apostrofe: "T3LeMoArAzHi", codigo_barra: "2000409298419" },
+    { tier: "T3", descripcion: "LENT3 MONO + AR AZUL + HI", precio: 189400.00, familia_key: "MO", graduacion_key: "GRAD", sku_con_apostrofe: "T3LeMoArAzHi", codigo_barra: "2000409298419" },
     { tier: "T3", descripcion: "LENT3 DE SOL GRADUADOS", precio: 208000.00, familia_key: "MO", graduacion_key: "GRAD", sku_con_apostrofe: "T3LeMoSol", codigo_barra: "2000409298426" },
     { tier: "T3", descripcion: "LENT3 MONOFOCAL FOTO", precio: 174200.00, familia_key: "MO", graduacion_key: "GRAD", sku_con_apostrofe: "T3LeMoFo", codigo_barra: "2000409298433" },
     
@@ -92,13 +92,13 @@ const RAW_CATALOG_DATA = [
     { tier: "T3", descripcion: "LENT3 PROGRE NEWPLUS+HI+ARAZUL", precio: 364600.00, familia_key: "NP", graduacion_key: "GRAD", sku_con_apostrofe: "T3LeProNewPlHiArAz", codigo_barra: "2000409298570" },
     
     // TIER 4
-    { tier: "T4", descripcion: "LENT4 NEUTROS CON AR VERDE", precio: 121200.00, familia_key: "NG", graduacion_key: "NOGRAD", sku_con_apostrofe: "T4LeNeArVr", codigo_barra: "2000409298587" },
-    { tier: "T4", descripcion: "LENT4 DE SOL NEUTRO", precio: 121200.00, familia_key: "NG", graduacion_key: "NOGRAD", sku_con_apostrofe: "T4LeNeSol", codigo_barra: "2000409298594" },
-    { tier: "T4", descripcion: "LENT4 PA LA COMPU NEUTROS", precio: 121200.00, familia_key: "NG", graduacion_key: "NOGRAD", sku_con_apostrofe: "T4LeNeCom", codigo_barra: "2000409298600" },
+    { tier: "T4", descripcion: "LENT4 NEUTROS CON AR VERDE", precio: 139000.00, familia_key: "NG", graduacion_key: "NOGRAD", sku_con_apostrofe: "T4LeNeArVr", codigo_barra: "2000409298587" },
+    { tier: "T4", descripcion: "LENT4 DE SOL NEUTRO", precio: 111200.00, familia_key: "NG", graduacion_key: "NOGRAD", sku_con_apostrofe: "T4LeNeSol", codigo_barra: "2000409298594" },
+    { tier: "T4", descripcion: "LENT4 PA LA COMPU NEUTROS", precio: 111200.00, familia_key: "NG", graduacion_key: "NOGRAD", sku_con_apostrofe: "T4LeNeCom", codigo_barra: "2000409298600" },
     
     { tier: "T4", descripcion: "LENT4 MONOFOCAL + AR AZUL", precio: 170200.00, familia_key: "MO", graduacion_key: "GRAD", sku_con_apostrofe: "T4LeMoArAz", codigo_barra: "2000409298617" },
     { tier: "T4", descripcion: "LENT4 MONOFOCAL + HI", precio: 178200.00, familia_key: "MO", graduacion_key: "GRAD", sku_con_apostrofe: "T4LeMoHi", codigo_barra: "2000409298624" },
-    { tier: "T4", descripcion: "LENT4 MONO + AR AZUL + HI", precio: 210200.00, familia_key: "MO", graduacion_key: "GRAD", sku_con_apostrofe: "T4LeMoArAzHi", codigo_barra: "2000409298631" },
+    { tier: "T4", descripcion: "LENT4 MONO + AR AZUL + HI", precio: 209400.00, familia_key: "MO", graduacion_key: "GRAD", sku_con_apostrofe: "T4LeMoArAzHi", codigo_barra: "2000409298631" },
     { tier: "T4", descripcion: "LENT4 DE SOL GRADUADOS", precio: 139016.00, familia_key: "MO", graduacion_key: "GRAD", sku_con_apostrofe: "T4LeMoSol", codigo_barra: "2000409298648" },
     { tier: "T4", descripcion: "LENT4 MONOFOCAL FOTO", precio: 194200.00, familia_key: "MO", graduacion_key: "GRAD", sku_con_apostrofe: "T4LeMoFo", codigo_barra: "2000409298655" },
     
@@ -119,13 +119,13 @@ const RAW_CATALOG_DATA = [
     { tier: "T4", descripcion: "LENT4 PROGRE NEWPLUS+HI+ARAZUL", precio: 384600.00, familia_key: "NP", graduacion_key: "GRAD", sku_con_apostrofe: "T4LeProNewPlHiArAz", codigo_barra: "2000409298792" },
     
     // TIER 5
-    { tier: "T5", descripcion: "LENT5 NEUTROS CON AR VERDE", precio: 141200.00, familia_key: "NG", graduacion_key: "NOGRAD", sku_con_apostrofe: "T5LeNeArVr", codigo_barra: "2000409298808" },
-    { tier: "T5", descripcion: "LENT5 DE SOL NEUTRO", precio: 141200.00, familia_key: "NG", graduacion_key: "NOGRAD", sku_con_apostrofe: "T5LeNeSol", codigo_barra: "2000409298815" },
-    { tier: "T5", descripcion: "LENT5 PA LA COMPU NEUTROS", precio: 141200.00, familia_key: "NG", graduacion_key: "NOGRAD", sku_con_apostrofe: "T5LeNeCom", codigo_barra: "2000409298822" },
+    { tier: "T5", descripcion: "LENT5 NEUTROS CON AR VERDE", precio: 159000.00, familia_key: "NG", graduacion_key: "NOGRAD", sku_con_apostrofe: "T5LeNeArVr", codigo_barra: "2000409298808" },
+    { tier: "T5", descripcion: "LENT5 DE SOL NEUTRO", precio: 127200.00, familia_key: "NG", graduacion_key: "NOGRAD", sku_con_apostrofe: "T5LeNeSol", codigo_barra: "2000409298815" },
+    { tier: "T5", descripcion: "LENT5 PA LA COMPU NEUTROS", precio: 127200.00, familia_key: "NG", graduacion_key: "NOGRAD", sku_con_apostrofe: "T5LeNeCom", codigo_barra: "2000409298822" },
     
     { tier: "T5", descripcion: "LENT5 MONOFOCAL + AR AZUL", precio: 190200.00, familia_key: "MO", graduacion_key: "GRAD", sku_con_apostrofe: "T5LeMoArAz", codigo_barra: "2000409298839" },
-    { tier: "T5", descripcion: "LENT5 MONOFOCAL + HI", precio: 198200.00, familia_key: "MO", graduacion_key: "GRAD", sku_con_apostrofe: "T5LeMoHi", codigo_barra: "2000409298846" },
-    { tier: "T5", descripcion: "LENT5 MONO + AR AZUL+ HI", precio: 230200.00, familia_key: "MO", graduacion_key: "GRAD", sku_con_apostrofe: "T5LeMoArAzHi", codigo_barra: "2000409298853" },
+    { tier: "T5", descripcion: "LENT5 MONOFOCAL + HI", precio: 190200.00, familia_key: "MO", graduacion_key: "GRAD", sku_con_apostrofe: "T5LeMoHi", codigo_barra: "2000409298846" },
+    { tier: "T5", descripcion: "LENT5 MONO + AR AZUL+ HI", precio: 229400.00, familia_key: "MO", graduacion_key: "GRAD", sku_con_apostrofe: "T5LeMoArAzHi", codigo_barra: "2000409298853" },
     { tier: "T5", descripcion: "LENT5 DE SOL GRADUADOS", precio: 248000.00, familia_key: "MO", graduacion_key: "GRAD", sku_con_apostrofe: "T5LeMoSol", codigo_barra: "2000409298860" },
     { tier: "T5", descripcion: "LENT5 MONOFOCAL FOTOCROMÁTICOS", precio: 214200.00, familia_key: "MO", graduacion_key: "GRAD", sku_con_apostrofe: "T5LeMoFo", codigo_barra: "2000409298877" },
     
